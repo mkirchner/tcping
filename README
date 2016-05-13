@@ -1,0 +1,56 @@
+$Id: README,v 1.7 2003/10/08 21:29:06 mkirchner Exp $
+
+-=[ tcping README
+
+This software may be freely distributed under the terms of
+the Lesser GNU General Public License (LGPL). See LICENSE file
+for details.
+
+THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+SUCH DAMAGE.
+
+--=[ How to build
+
+On LiNUX systems:	make tcping.linux
+On OpenBSD:		make tcping.openbsd
+On Solaris 7/8:		make tcping.solaris
+On Solaris 2.6:		make tcping.solaris26
+On AIX:			make tcping.aix
+
+-=[ Return values
+
+Return values to the shell are:
+-1	an error occured
+0	port is open
+1	port is closed
+2	connection establishment timed out
+
+-=[ Notes
+
+1. Non-blocking connetcs are one of the most non-portable areas
+   of network programming. Hope for the best.
+2. I hope AIX support works out fine. The only AIX box I have access
+   to returns "AIX aixterm3 3 4 0006404B4C00" (whatever this means)
+   on a 'uname -a'.
+
+-=[ Acknowledgements
+
+Many thanks to
+    Kai Hambrecht
+    John Smith
+    Vincent Loriot
+
+-=[ Author notes
+
+If you happen to find any bugs or you have improved my code, please
+be so kind to drop me a line. Thank you.
+Marc Kirchner <mail(at)marc(dash)kirchner(dot)de>
