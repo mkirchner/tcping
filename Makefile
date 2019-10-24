@@ -1,7 +1,3 @@
-#
-# $Id: Makefile,v 1.18 2004/11/01 16:22:03 mkirchner Exp $
-#
-
 FILES=README tcping.c Makefile LICENSE
 VERNUM=`grep VERSION tcping.c | cut -d" " -f3`
 VER=tcping-$(VERNUM)
