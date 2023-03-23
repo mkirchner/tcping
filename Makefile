@@ -12,10 +12,6 @@ tcping.macos: tcping.linux
 
 tcping.openbsd: tcping.linux
 
-.PHONY: test
-test:
-	@test/test.sh
-
 deb-linux: tcping.linux
 	mkdir -p debian/usr/bin
 	cp tcping debian/usr/bin
