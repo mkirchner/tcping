@@ -1,0 +1,92 @@
+.\" Process this file with
+.\" groff -man -Tascii tcping.1
+.\"
+.TH TCPING 1 "AUGUST 2002" Linux "User Manuals"
+.SH NAME
+tcping \- non-blocking TCP connection test
+
+.SH SYNOPSIS
+.B tcping [-q] [-f
+.I <4|6>
+.B ] [-t
+.I timeout-sec
+.B | -u
+.I timeout-usec
+.B ]
+.I host port
+
+.SH DESCRIPTION
+.B tcping
+attempts to connect to a TCP
+.B host:port
+combination, determines if such a connection is possible within a
+user-specified time interval and returns the result encoded in its return
+value.
+
+.SH OPTIONS
+.IP -q
+Quiet flag. Suppress all informational output.
+.IP "-f <4|6>"
+IP protocol family to use: 4 for IPv4, 6 for IPv6.
+If left unspecifed, the implementation will use
+the protocol family of the first record returned from
+.BR getaddrinfo(3),
+based on the format of the
+.BR host
+parameter.
+Specifying
+.BR host
+as dotted-decimal IPv4 or hex IPv6 address string
+will use the respective protocol stack. Specification as a hostname
+character string will cause a dependency on the order of IPv4 and IPv6
+records returned from
+.BR getaddrinfo(3).
+.IP "-t timeout-sec"
+Connection timeout in seconds.
+.IP "-u timeout-usec"
+Connection timeout in microseconds.
+.IP host
+Destination host. Either a host name node name or a numeric host address
+string (i.e., a dotted-decimal IPv4 address or an IPv6 hex address), per
+RFC 2553.
+.IP port
+Destination port. Either a service name or a decimal port number,
+per RFC 2553.
+
+.SH RETURN VALUES
+.B tcping
+encodes the result of the connection attempt in its return value:
+.IP 0
+The connection attempt was successful.
+.IP 1
+The connection attempt was unsuccessful.
+.IP 2
+The connection attempt timed out.
+.IP 255
+An error occured.
+
+.SH DIAGNOSTICS
+Unless the quiet
+.B (-q)
+flag is set, the following diagnostics may be
+issued on stderr:
+
+HOST port PORT open.
+.RS
+The specified host/port combination identifies a valid TCP endpoint.
+.RE
+HOST port PORT closed.
+.RS
+The specified host/port combination cannot be connected to.
+.RE
+HOST port PORT user timeout.
+.RS
+The connection attemtp to the specified host/port combination
+did not complete within the user-defined timeout interval.
+
+
+.SH AUTHOR
+Marc Kirchner <mail at marc-kirchner dot de>
+.SH "SEE ALSO"
+.BR nc(1)
+

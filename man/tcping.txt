@@ -1,0 +1,83 @@
+TCPING(1)                        User Manuals                        TCPING(1)
+
+
+
+NNAAMMEE
+       tcping - non-blocking TCP connection test
+
+
+SSYYNNOOPPSSIISS
+       ttccppiinngg [[--qq]] [[--ff _<_4_|_6_> ]] [[--tt _t_i_m_e_o_u_t_-_s_e_c || --uu _t_i_m_e_o_u_t_-_u_s_e_c ]] _h_o_s_t _p_o_r_t
+
+
+DDEESSCCRRIIPPTTIIOONN
+       ttccppiinngg  attempts  to connect to a TCP hhoosstt::ppoorrtt combination, determines
+       if such a connection is possible within a user-specified time  interval
+       and returns the result encoded in its return value.
+
+
+OOPPTTIIOONNSS
+       -q     Quiet flag. Suppress all informational output.
+
+       -f <4|6>
+              IP  protocol  family  to  use:  4 for IPv4, 6 for IPv6.  If left
+              unspecifed, the implementation will use the protocol  family  of
+              the first record returned from ggeettaaddddrriinnffoo((33)),, based on the for-
+              mat of the hhoosstt parameter.  Specifying  hhoosstt  as  dotted-decimal
+              IPv4 or hex IPv6 address string will use the respective protocol
+              stack. Specification as a hostname character string will cause a
+              dependency  on  the order of IPv4 and IPv6 records returned from
+              ggeettaaddddrriinnffoo((33))..
+
+       -t timeout-sec
+              Connection timeout in seconds.
+
+       -u timeout-usec
+              Connection timeout in microseconds.
+
+       host   Destination host. Either a host name node name or a numeric host
+              address  string  (i.e., a dotted-decimal IPv4 address or an IPv6
+              hex address), per RFC 2553.
+
+       port   Destination port. Either a service name or a decimal  port  num-
+              ber, per RFC 2553.
+
+
+RREETTUURRNN VVAALLUUEESS
+       ttccppiinngg  encodes  the  result  of  the  connection attempt in its return
+       value:
+
+       0      The connection attempt was successful.
+
+       1      The connection attempt was unsuccessful.
+
+       2      The connection attempt timed out.
+
+       255    An error occured.
+
+
+DDIIAAGGNNOOSSTTIICCSS
+       Unless the quiet ((--qq)) flag is set, the  following  diagnostics  may  be
+       issued on stderr:
+
+       HOST port PORT open.
+              The  specified host/port combination identifies a valid TCP end-
+              point.
+       HOST port PORT closed.
+              The specified host/port combination cannot be connected to.
+       HOST port PORT user timeout.
+              The connection attemtp to the  specified  host/port  combination
+              did not complete within the user-defined timeout interval.
+
+
+
+AAUUTTHHOORR
+       Marc Kirchner <mail at marc-kirchner dot de>
+
+SSEEEE AALLSSOO
+       nncc((11))
+
+
+
+
+Linux                             AUGUST 2002                        TCPING(1)
