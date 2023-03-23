@@ -117,7 +117,7 @@ int main(int argc, char *argv[])
         if (errno != EINPROGRESS) {
             log(verbosity, stderr, "error: %s port %s: %s\n", hostname,
                 servicename, strerror(errno));
-            return (-1);
+            exit(-1);
         }
 
         FD_ZERO(&fdrset);
@@ -134,7 +134,7 @@ int main(int argc, char *argv[])
             close(sockfd);
             log(verbosity, stdout, "%s port %s user timeout.\n", hostname,
                 servicename);
-            return (2);
+            return 2;
         }
         if (FD_ISSET(sockfd, &fdrset) || FD_ISSET(sockfd, &fdwset)) {
             errlen = sizeof(error);
@@ -144,13 +144,13 @@ int main(int argc, char *argv[])
                 log(verbosity, stderr, "error: %s port %s: getsockopt: %s\n",
                     hostname, servicename, strerror(errno));
                 close(sockfd);
-                return (-1);
+                exit(-1);
             }
             if (error != 0) {
                 log(verbosity, stdout, "%s port %s closed.\n", hostname,
                     servicename);
                 close(sockfd);
-                return (1);
+                return 1;
             }
         } else {
             log(verbosity, stderr, "error: select: sockfd not set\n");
