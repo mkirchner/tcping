@@ -6,18 +6,11 @@ CCFLAGS=-Wall
 CC=gcc
 
 tcping.linux: tcping.c
-	$(CC) -o tcping $(CCFLAGS) -DHAVE_HSTRERROR tcping.c 
+	$(CC) -o tcping $(CCFLAGS) tcping.c
+
+tcping.macos: tcping.linux
 
 tcping.openbsd: tcping.linux
-
-tcping.solaris: tcping.c
-	$(CC) $(CCFLAGS) -o tcping -DHAVE_SOLARIS tcping.c -lsocket -lnsl
-
-tcping.solaris26: tcping.c
-	$(CC) $(CCFLAGS) -o tcping tcping.c -lsocket -lnsl
-
-tcping.aix: tcping.c
-	$(CC) $(CCFLAGS) -o tcping -DHAVE_STRINGS_H tcping.c
 
 deb-linux: tcping.linux
 	mkdir -p debian/usr/bin

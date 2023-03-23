@@ -1,7 +1,7 @@
 /*
  * tcping.c
  *
- * Copyright (c) 2002-2019 Marc Kirchner
+ * Copyright (c) 2002-2023 Marc Kirchner
  *
  * tcping does a nonblocking connect to test if a port is reachable.
  * Its exit codes are:
@@ -11,7 +11,7 @@
  *     2  user timeout
  */
 
-#define VERSION 1.3.6
+#define VERSION 2.0.0
 
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -20,9 +20,6 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <string.h>
-#ifdef HAVE_STRINGS_H
-#include <strings.h>
-#endif
 #include <unistd.h>
 #include <sys/time.h>
 #include <fcntl.h>
@@ -74,17 +71,11 @@ int main (int argc, char *argv[]) {
 		}
 	}
 	
-	sockfd = socket (AF_INET, SOCK_STREAM, 0);
-
 	memset(&addr, 0, sizeof(addr));
 
 	if ((host = gethostbyname(argv[optind])) == NULL) {
 		if (verbose)
-#ifdef HAVE_HSTRERROR
 			fprintf(stderr, "error: %s\n", hstrerror(h_errno));
-#else
-			fprintf(stderr, "error: host not found");
-#endif
 		exit(-1);
 	}
 	
@@ -100,24 +91,13 @@ int main (int argc, char *argv[]) {
 	}
 	addr.sin_port = htons(port);
 
+	sockfd = socket(AF_INET, SOCK_STREAM, 0);
 	fcntl(sockfd, F_SETFL, O_NONBLOCK);
 	if ((ret = connect(sockfd, (struct sockaddr *) &addr, sizeof(addr))) != 0) {
 		if (errno != EINPROGRESS) {
-#ifdef HAVE_SOLARIS
-			/* solaris immediately returns ECONNREFUSED on local ports */
-			if (errno == ECONNREFUSED) {
-				if (verbose) 
-					fprintf(stdout, "%s port %s closed.\n", argv[optind], argv[optind+1]);
-				close(sockfd);
-				return(1);
-			} else {
-#endif	
 				if (verbose)
 					fprintf(stderr, "error: %s port %s: %s\n", argv[optind], argv[optind+1], strerror(errno));
 				return (-1);
-#ifdef HAVE_SOLARIS
-			}
-#endif	
 		}
 
 		FD_ZERO(&fdrset);
