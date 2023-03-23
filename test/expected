@@ -1,6 +1,6 @@
-error: Usage: ./tcping [-q] [-t timeout_sec] [-u timeout_usec] <host> <port>
-error: Unknown host
+error: Usage: ./tcping [-q] [-f <4|6>] [-t timeout_sec] [-u timeout_usec] <host> <port>
+error: nodename nor servname provided, or not known
 10.0.0.1 port 22 user timeout.
-localhost port 22222 closed.
-localhost port 22 open.
+::1 port 22222 closed.
+::1 port 22 open.
 127.0.0.1 port 22 open.
