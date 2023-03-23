@@ -38,8 +38,6 @@ int main(int argc, char *argv[])
 {
 
     int sockfd;
-    struct sockaddr_in addr;
-    struct hostent *host;
     int error = 0;
     int ret;
     socklen_t errlen;
@@ -49,7 +47,6 @@ int main(int argc, char *argv[])
     int c;
     char *cptr;
     long timeout_sec = 0, timeout_usec = 0;
-    int port = 0;
 
     if (argc < 3) {
         usage(argv[0]);
@@ -78,28 +75,32 @@ int main(int argc, char *argv[])
         }
     }
 
-    memset(&addr, 0, sizeof(addr));
+    struct addrinfo hints, *res, *it;
+    int err;
+    memset(&hints, 0, sizeof(struct addrinfo));
+    hints.ai_family = AF_UNSPEC;
+    hints.ai_socktype = SOCK_STREAM;
+    
+    if (!argv[optind + 1]) {
+        usage(argv[0]);
+    }
 
-    if ((host = gethostbyname(argv[optind])) == NULL) {
-        log(verbosity, stderr, "error: %s\n", hstrerror(h_errno));
+    if ((err = getaddrinfo(argv[optind], argv[optind+1], &hints, &res)) != 0) {
+        log(verbosity, stderr, "error: %s\n", gai_strerror(err));
         exit(-1);
     }
 
-    memcpy(&addr.sin_addr, host->h_addr_list[0], host->h_length);
-    addr.sin_family = host->h_addrtype; /* always AF_INET */
-    if (argv[optind + 1]) {
-        cptr = NULL;
-        port = strtol(argv[optind + 1], &cptr, 10);
-        if (cptr == argv[optind + 1])
-            usage(argv[0]);
-    } else {
-        usage(argv[0]);
-    }
-    addr.sin_port = htons(port);
+    it = res;  /* set iterator to first resolution result */
 
-    sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    /* FIXME: iterate until we find the expected ai_family */
+
+    sockfd = socket(it->ai_family, it->ai_socktype, it->ai_protocol);
+    fprintf(stdout, "ai_fam: %d\n", it->ai_family);
+
     fcntl(sockfd, F_SETFL, O_NONBLOCK);
-    if ((ret = connect(sockfd, (struct sockaddr *)&addr, sizeof(addr))) != 0) {
+    ret = connect(sockfd, it->ai_addr, it->ai_addrlen);
+    freeaddrinfo(res);
+    if (ret) {
         if (errno != EINPROGRESS) {
             log(verbosity, stderr, "error: %s port %s: %s\n", argv[optind],
                 argv[optind + 1], strerror(errno));
