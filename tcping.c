@@ -5,10 +5,10 @@
  *
  * tcping does a nonblocking connect to test if a port is reachable.
  * Its exit codes are:
- *     -1 an error occured
- *     0  port is open
- *     1  port is closed
- *     2  user timeout
+ *     255 an error occured
+ *     0   port is open
+ *     1   port is closed
+ *     2   user timeout
  */
 
 #define VERSION 2.0.0
