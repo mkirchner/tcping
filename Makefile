@@ -12,6 +12,10 @@ tcping.macos: tcping.linux
 
 tcping.openbsd: tcping.linux
 
+.PHONY: test
+test:
+	@test/test.sh
+
 deb-linux: tcping.linux
 	mkdir -p debian/usr/bin
 	cp tcping debian/usr/bin
@@ -22,8 +26,8 @@ deb-linux: tcping.linux
 	rm -rf debian
 
 clean:
-	rm -f tcping.solaris* tcping core *.o *.deb
+	rm -f tcping core *.o *.deb
 	rm -rf debian/
 
 dist:
-	mkdir $(VER) ; cp $(FILES) $(VER)/ ; tar -c $(VER) | gzip -9 > $(VER).tar.gz ; rm -rf $(VER)
+	mkdir $(VER) ; cp $(FILES)
