@@ -1,0 +1,106 @@
+.\" Process this file with
+.\" groff -man -Tascii tcping.1
+.\"
+.TH TCPING 1 "MARCH 2023" Linux "User Manuals"
+.SH NAME
+tcping \- non-blocking TCP connection test
+.SH SYNOPSIS
+.B tcping [-q] [-f
+.I <4|6>
+.B ] [-t
+.I timeout-sec
+.B | -u
+.I timeout-usec
+.B ]
+.I host port
+.SH DESCRIPTION
+.B tcping
+attempts to complete a TCP connection to a
+.B host:port
+combination within the time interval
+.B timeout-[u]sec.
+The result of the operation is encoded as a return value.
+.SH OPTIONS
+.IP -q
+Quiet flag. Suppress all informational output.
+.IP "-f <4|6>"
+IP protocol family to use: 4 for IPv4, 6 for IPv6.
+If left unspecifed, the implementation will use
+the protocol family of the first record returned from
+.BR getaddrinfo(3),
+based on the format of the
+.BR host
+parameter.
+Specifying
+.BR host
+as dotted-decimal IPv4 or hex IPv6 address string
+will use the respective protocol stack. Specification as a hostname
+character string will cause a dependency on the order of IPv4 and IPv6
+records returned from
+.BR getaddrinfo(3).
+.IP "-t timeout-sec"
+Connection timeout in seconds.
+.IP "-u timeout-usec"
+Connection timeout in microseconds.
+.IP host
+Destination host. Either a host name node name or a numeric host address
+string (i.e., a dotted-decimal IPv4 address or an IPv6 hex address), per
+RFC 2553.
+.IP port
+Destination port. Either a service name or a decimal port number,
+per RFC 2553.
+.SH RETURN VALUES
+.B tcping
+encodes the result of the connection attempt in its return value:
+.IP 0
+The connection attempt was successful.
+.IP 1
+The connection attempt was unsuccessful.
+.IP 2
+The connection attempt timed out.
+.IP 255
+An error occured.
+.SH DIAGNOSTICS
+Unless the quiet
+.B (-q)
+flag is set, the following diagnostics are issued on stderr. The messages align
+with the program return value (see above).
+
+.B <host>
+port
+.B <port>
+open.
+.RS
+The connection attempt to
+.B host:port
+was successful.
+.RE
+.B <host>
+port
+.B <port>
+closed.
+.RS
+The connection attempt to
+.B host:port
+was unsuccessful and the server side signaled a closed port.
+.RE
+.B <host>
+port
+.B <port>
+user timeout.
+.RS
+The connection attempt to
+.B host:port
+did not complete within the user-defined timeout interval.
+.SH AUTHOR
+Marc Kirchner <mail at marc-kirchner dot de>
+.SH HISTORY
+.B tcping
+came to be in 2002 as a utility to allow basic TCP connection checking and to enable failure shortcircutry
+before issuing network commands with long timeouts (on Solarix 2.x, Solaris 7/8, AIX and Linux). IPv6
+functionality was added for 2.0.0 in 2023, which also dropped support for the AIX and Solaris OS.
+.SH ACKNOWLEDGEMENTS
+Many thanks to Kai Hambrecht, John Smith and Vincent Loriot.
+.SH "SEE ALSO"
+.BR nc(1)
+

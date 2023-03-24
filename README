@@ -1,45 +1,87 @@
+TCPING(1)                        User Manuals                        TCPING(1)
 
--=[ tcping README
 
-This software may be freely distributed under the terms of
-the MIT license. See LICENSE file for details.
 
-As of 2016, the tcping homepage is:
-	https://github.com/mkirchner/tcping
+NAME
+       tcping - non-blocking TCP connection test
 
---=[ How to build
+SYNOPSIS
+       tcping [-q] [-f <4|6> ] [-t timeout-sec | -u timeout-usec ] host port
 
-On LiNUX systems:	make tcping.linux
-On OpenBSD:		make tcping.openbsd
-On Solaris 7/8:		make tcping.solaris
-On Solaris 2.6:		make tcping.solaris26
-On AIX:			make tcping.aix
+DESCRIPTION
+       tcping attempts to complete a TCP connection to a host:port combination
+       within the time interval timeout-[u]sec.  The result of  the  operation
+       is encoded as a return value.
 
--=[ Return values
+OPTIONS
+       -q     Quiet flag. Suppress all informational output.
 
-Return values to the shell are:
--1	an error occured
-0	port is open
-1	port is closed
-2	connection establishment timed out
+       -f <4|6>
+              IP  protocol  family  to  use:  4 for IPv4, 6 for IPv6.  If left
+              unspecifed, the implementation will use the protocol  family  of
+              the first record returned from getaddrinfo(3), based on the for-
+              mat of the host parameter.  Specifying  host  as  dotted-decimal
+              IPv4 or hex IPv6 address string will use the respective protocol
+              stack. Specification as a hostname character string will cause a
+              dependency  on  the order of IPv4 and IPv6 records returned from
+              getaddrinfo(3).
 
--=[ Notes
+       -t timeout-sec
+              Connection timeout in seconds.
 
-1. Non-blocking connetcs are one of the most non-portable areas
-   of network programming. Hope for the best.
-2. I hope AIX support works out fine. The only AIX box I have access
-   to returns "AIX aixterm3 3 4 0006404B4C00" (whatever this means)
-   on a 'uname -a'.
+       -u timeout-usec
+              Connection timeout in microseconds.
 
--=[ Acknowledgements
+       host   Destination host. Either a host name node name or a numeric host
+              address  string  (i.e., a dotted-decimal IPv4 address or an IPv6
+              hex address), per RFC 2553.
 
-Many thanks to
-    Kai Hambrecht
-    John Smith
-    Vincent Loriot
+       port   Destination port. Either a service name or a decimal  port  num-
+              ber, per RFC 2553.
 
--=[ Author notes
+RETURN VALUES
+       tcping  encodes  the  result  of  the  connection attempt in its return
+       value:
 
-Originally released in 2003. If you happen to find any bugs or you have
-improved my code, please be so kind to drop me a line. Thank you.
-Marc Kirchner <mail(at)marc(dash)kirchner(dot)de>
+       0      The connection attempt was successful.
+
+       1      The connection attempt was unsuccessful.
+
+       2      The connection attempt timed out.
+
+       255    An error occured.
+
+DIAGNOSTICS
+       Unless the quiet (-q) flag is set, the following diagnostics are issued
+       on  stderr.  The  messages  align  with  the  program return value (see
+       above).
+
+       <host> port <port> open.
+              The connection attempt to host:port was successful.
+       <host> port <port> closed.
+              The connection attempt to host:port  was  unsuccessful  and  the
+              server side signaled a closed port.
+       <host> port <port> user timeout.
+              The  connection attempt to host:port did not complete within the
+              user-defined timeout interval.
+
+AUTHOR
+       Marc Kirchner <mail at marc-kirchner dot de>
+
+HISTORY
+       tcping came to be in 2002 as a utility to allow  basic  TCP  connection
+       checking  and  to  enable  failure shortcircutry before issuing network
+       commands with long timeouts (on  Solarix  2.x,  Solaris  7/8,  AIX  and
+       Linux).  IPv6  functionality  was  added  for 2.0.0 in 2023, which also
+       dropped support for the AIX and Solaris OS.
+
+ACKNOWLEDGEMENTS
+       Many thanks to Kai Hambrecht, John Smith and Vincent Loriot.
+
+SEE ALSO
+       nc(1)
+
+
+
+
+Linux                             MARCH 2023                         TCPING(1)

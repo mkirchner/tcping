@@ -6,18 +6,14 @@ CCFLAGS=-Wall
 CC=gcc
 
 tcping.linux: tcping.c
-	$(CC) -o tcping $(CCFLAGS) -DHAVE_HSTRERROR tcping.c 
+	$(CC) -o tcping $(CCFLAGS) tcping.c
+
+tcping.macos: tcping.linux
 
 tcping.openbsd: tcping.linux
 
-tcping.solaris: tcping.c
-	$(CC) $(CCFLAGS) -o tcping -DHAVE_SOLARIS tcping.c -lsocket -lnsl
-
-tcping.solaris26: tcping.c
-	$(CC) $(CCFLAGS) -o tcping tcping.c -lsocket -lnsl
-
-tcping.aix: tcping.c
-	$(CC) $(CCFLAGS) -o tcping -DHAVE_STRINGS_H tcping.c
+readme: man/tcping.1
+	groff -man -Tascii man/tcping.1 | col -bx > README
 
 deb-linux: tcping.linux
 	mkdir -p debian/usr/bin
@@ -29,8 +25,8 @@ deb-linux: tcping.linux
 	rm -rf debian
 
 clean:
-	rm -f tcping.solaris* tcping core *.o *.deb
+	rm -f tcping core *.o *.deb
 	rm -rf debian/
 
 dist:
-	mkdir $(VER) ; cp $(FILES) $(VER)/ ; tar -c $(VER) | gzip -9 > $(VER).tar.gz ; rm -rf $(VER)
+	mkdir $(VER) ; cp $(FILES)
