@@ -12,6 +12,9 @@ tcping.macos: tcping.linux
 
 tcping.openbsd: tcping.linux
 
+readme: man/tcping.1
+	groff -man -Tascii man/tcping.1 | col -bx > README
+
 deb-linux: tcping.linux
 	mkdir -p debian/usr/bin
 	cp tcping debian/usr/bin

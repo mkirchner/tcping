@@ -1,10 +1,9 @@
 .\" Process this file with
 .\" groff -man -Tascii tcping.1
 .\"
-.TH TCPING 1 "AUGUST 2002" Linux "User Manuals"
+.TH TCPING 1 "MARCH 2023" Linux "User Manuals"
 .SH NAME
 tcping \- non-blocking TCP connection test
-
 .SH SYNOPSIS
 .B tcping [-q] [-f
 .I <4|6>
@@ -14,15 +13,13 @@ tcping \- non-blocking TCP connection test
 .I timeout-usec
 .B ]
 .I host port
-
 .SH DESCRIPTION
 .B tcping
-attempts to connect to a TCP
+attempts to complete a TCP connection to a
 .B host:port
-combination, determines if such a connection is possible within a
-user-specified time interval and returns the result encoded in its return
-value.
-
+combination within the time interval
+.B timeout-[u]sec.
+The result of the operation is encoded as a return value.
 .SH OPTIONS
 .IP -q
 Quiet flag. Suppress all informational output.
@@ -52,7 +49,6 @@ RFC 2553.
 .IP port
 Destination port. Either a service name or a decimal port number,
 per RFC 2553.
-
 .SH RETURN VALUES
 .B tcping
 encodes the result of the connection attempt in its return value:
@@ -64,29 +60,47 @@ The connection attempt was unsuccessful.
 The connection attempt timed out.
 .IP 255
 An error occured.
-
 .SH DIAGNOSTICS
 Unless the quiet
 .B (-q)
-flag is set, the following diagnostics may be
-issued on stderr:
+flag is set, the following diagnostics are issued on stderr. The messages align
+with the program return value (see above).
 
-HOST port PORT open.
+.B <host>
+port
+.B <port>
+open.
 .RS
-The specified host/port combination identifies a valid TCP endpoint.
+The connection attempt to
+.B host:port
+was successful.
 .RE
-HOST port PORT closed.
+.B <host>
+port
+.B <port>
+closed.
 .RS
-The specified host/port combination cannot be connected to.
+The connection attempt to
+.B host:port
+was unsuccessful and the server side signaled a closed port.
 .RE
-HOST port PORT user timeout.
+.B <host>
+port
+.B <port>
+user timeout.
 .RS
-The connection attemtp to the specified host/port combination
+The connection attempt to
+.B host:port
 did not complete within the user-defined timeout interval.
-
-
 .SH AUTHOR
 Marc Kirchner <mail at marc-kirchner dot de>
+.SH HISTORY
+.B tcping
+came to be in 2002 as a utility to allow basic TCP connection checking and to enable failure shortcircutry
+before issuing network commands with long timeouts (on Solarix 2.x, Solaris 7/8, AIX and Linux). IPv6
+functionality was added for 2.0.0 in 2023, which also dropped support for the AIX and Solaris OS.
+.SH ACKNOWLEDGEMENTS
+Many thanks to Kai Hambrecht, John Smith and Vincent Loriot.
 .SH "SEE ALSO"
 .BR nc(1)
 
