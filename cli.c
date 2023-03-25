@@ -3,21 +3,16 @@
  *
  * Copyright (c) 2002-2023 Marc Kirchner
  *
- * tcping does a nonblocking connect to test if a port is reachable.
- * Its exit codes are:
- *     255 an error occured
- *     0   port is open
- *     1   port is closed
- *     2   user timeout
  */
 
-#include "tcping.h"
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/socket.h>
 #include <sys/time.h>
 #include <unistd.h>
+
+#include "tcping.h"
 
 void usage(char *prog)
 {
@@ -79,11 +74,17 @@ int main(int argc, char *argv[])
     timeout.tv_usec = timeout_usec % 1000000;
 
     struct hostinfo *host;
-    tcping_gethostinfo(argv[optind], argv[optind + 1], force_ai_family, &host);
+    int err;
+    int retval = 0;
+    if ((err = tcping_gethostinfo(argv[optind], argv[optind + 1],
+                                  force_ai_family, &host)) != 0) {
+        log(verbosity, stderr, "error: %s\n", gai_strerror(err));
+        retval = 255;
+        goto quit;
+    }
     int sockfd = tcping_socket(host);
     int result = tcping_connect(sockfd, host, &timeout);
     tcping_close(sockfd);
-    int retval = 0;
     switch (result) {
     case TCPING_ERROR:
         log(verbosity, stderr, "error: %s port %s: %s\n", host->name,
@@ -107,6 +108,7 @@ int main(int argc, char *argv[])
         retval = 255;
         break;
     }
+quit:
     tcping_freehostinfo(host);
     return retval;
 }
