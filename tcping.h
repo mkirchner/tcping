@@ -14,7 +14,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#define VERSION 2.0.0
+#define TCPING_VERSION "2.1.0"
 
 #define log(verbosity, fmt, ...)                                               \
     do {                                                                       \
@@ -40,6 +40,5 @@ void tcping_freehostinfo(struct hostinfo *hi);
 int tcping_socket(struct hostinfo *host);
 int tcping_connect(int sockfd, struct hostinfo *host, struct timeval *timeout);
 int tcping_close(int sockfd);
-;
 
 #endif

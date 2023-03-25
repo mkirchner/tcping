@@ -1,5 +1,5 @@
 FILES=README cli.c tcping.h tcping.c Makefile LICENSE
-VERNUM=`grep VERSION tcping.c | cut -d" " -f3`
+VERNUM=$$(grep TCPING_VERSION tcping.h | cut -d" " -f3 | sed -e 's/"//g')
 VER=tcping-$(VERNUM)
 
 CCFLAGS=-Wall
@@ -15,9 +15,9 @@ tcping.openbsd: tcping.linux
 readme: man/tcping.1
 	groff -man -Tascii man/tcping.1 | col -bx > README
 
+.PHONY: clean dist
 clean:
 	rm -f tcping core *.o
-	rm -rf debian/
 
 dist:
 	mkdir $(VER)
@@ -25,3 +25,4 @@ dist:
 	cp $(FILES) $(VER)/
 	cp man/tcping.1 $(VER)/man/
 	tar cvzf $(VER).tar.gz $(VER)
+	rm -rf $(VER)
