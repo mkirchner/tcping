@@ -22,8 +22,11 @@ int tcping_gethostinfo(char *node, char *serv, int ai_family,
 
 void tcping_freehostinfo(struct hostinfo *hi)
 {
-    freeaddrinfo(hi->ai);
-    free(hi);
+    if (hi) {
+        if (hi->ai)
+            freeaddrinfo(hi->ai);
+        free(hi);
+    }
 }
 
 int tcping_socket(struct hostinfo *host)
